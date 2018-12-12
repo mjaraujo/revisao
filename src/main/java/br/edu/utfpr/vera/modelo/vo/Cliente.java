@@ -12,6 +12,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -20,6 +22,11 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "tb_cliente")
+@NamedQueries({
+        @NamedQuery(name = "Cliente.findByNome", query = "SELECT c FROM Cliente c WHERE c.nome LIKE :nome ORDER BY c.nome ")}
+)
+
+
 public class Cliente {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

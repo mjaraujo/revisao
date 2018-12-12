@@ -6,8 +6,8 @@
 package br.edu.utfpr.vera.visao.cliente;
 
 import br.edu.utfpr.vera.visao.tiposervico.*;
-import br.edu.utfpr.vera.modelo.dao.TipoServicoDao;
-import br.edu.utfpr.vera.modelo.vo.TipoServico;
+import br.edu.utfpr.vera.modelo.dao.ClienteDao;
+import br.edu.utfpr.vera.modelo.vo.Cliente;
 import javax.swing.JOptionPane;
 
 /**
@@ -16,21 +16,26 @@ import javax.swing.JOptionPane;
  */
 public class NovoClienteForm extends javax.swing.JInternalFrame {
 
-    private final TipoServico tipoServico;
+    public interface Callback {
+        void handle(Cliente cliente);
+    }
+
+    private final Cliente cliente;
+    private final NovoClienteForm.Callback callback;
     private boolean edicao;
 
     /**
-     * Creates new form NovoTipoServicoForm
+     * Creates new form NovoClienteForm
      */
-    public NovoClienteForm() {
-        tipoServico = new TipoServico();
-        edicao = false;
-        initComponents();
+    public NovoClienteForm(NovoClienteForm.Callback cliente) {
+        this(new Cliente(), cliente);
     }
 
-    NovoClienteForm(TipoServico tipoServicoSelecionado) {
-        tipoServico = tipoServicoSelecionado;
-        edicao = true;
+    NovoClienteForm(Cliente clienteSelecionado, NovoClienteForm.Callback callback) {
+        this.cliente = clienteSelecionado;
+        this.callback = callback;
+        this.edicao = clienteSelecionado.getCodigo() == 0;
+        
         initComponents();
     }
 
@@ -49,15 +54,16 @@ public class NovoClienteForm extends javax.swing.JInternalFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         txtDescricao = new javax.swing.JTextField();
-        jftValorPagina = new javax.swing.JFormattedTextField();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         txtCPF = new javax.swing.JTextField();
         jTextField2 = new javax.swing.JTextField();
+        txtInstituicao = new javax.swing.JTextField();
         btnConfirmar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(204, 255, 255));
+        setTitle("Novo cliente");
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel1.setText("Novo cliente");
@@ -68,17 +74,21 @@ public class NovoClienteForm extends javax.swing.JInternalFrame {
 
         jLabel3.setText("Instituição");
 
-        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${tipoServico.descricao}"), txtDescricao, org.jdesktop.beansbinding.BeanProperty.create("text"));
-        bindingGroup.addBinding(binding);
-
-        jftValorPagina.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${tipoServico.valorPagina}"), jftValorPagina, org.jdesktop.beansbinding.BeanProperty.create("value"));
+        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${cliente.nome}"), txtDescricao, org.jdesktop.beansbinding.BeanProperty.create("text"));
         bindingGroup.addBinding(binding);
 
         jLabel5.setText("CPF");
 
         jLabel6.setText("Endereco");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${cliente.cpf}"), txtCPF, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        bindingGroup.addBinding(binding);
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${cliente.endereco}"), jTextField2, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        bindingGroup.addBinding(binding);
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${cliente.instituicao}"), txtInstituicao, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        bindingGroup.addBinding(binding);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -94,11 +104,11 @@ public class NovoClienteForm extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtDescricao)
+                    .addComponent(jTextField2)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(txtCPF, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jTextField2)
-                    .addComponent(jftValorPagina))
+                    .addComponent(txtInstituicao))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -108,10 +118,10 @@ public class NovoClienteForm extends javax.swing.JInternalFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(txtDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel3)
-                    .addComponent(jftValorPagina, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtInstituicao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
@@ -181,25 +191,22 @@ public class NovoClienteForm extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarActionPerformed
-        if (tipoServico.getValorPagina() <= 0D) {
-            JOptionPane.showMessageDialog(null, "Valor da página inválido!");
-            return;
-        }
 
-        if(edicao){
-            new TipoServicoDao().update(getTipoServico());
-        }else{
-            new TipoServicoDao().save(getTipoServico());
+        if (edicao) {
+            new ClienteDao().update(cliente);
+        } else {
+            new ClienteDao().save(cliente);
         }
         JOptionPane.showMessageDialog(null, "Tipo de serviço adicionado!");
         dispose();
+        callback.handle(cliente);
     }//GEN-LAST:event_btnConfirmarActionPerformed
 
     /**
-     * @return the tipoServico
+     * @return the cliente
      */
-    public TipoServico getTipoServico() {
-        return tipoServico;
+    public Cliente getCliente() {
+        return cliente;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -212,9 +219,9 @@ public class NovoClienteForm extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField jTextField2;
-    private javax.swing.JFormattedTextField jftValorPagina;
     private javax.swing.JTextField txtCPF;
     private javax.swing.JTextField txtDescricao;
+    private javax.swing.JTextField txtInstituicao;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 

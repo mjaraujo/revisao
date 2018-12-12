@@ -5,6 +5,7 @@
  */
 package br.edu.utfpr.vera.visao;
 
+import br.edu.utfpr.vera.visao.cliente.ClientesForm;
 import br.edu.utfpr.vera.visao.tiposervico.NovoTipoServicoForm;
 import br.edu.utfpr.vera.visao.tiposervico.TipoServicoForm;
 
@@ -49,7 +50,7 @@ public class PrincipalForm extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         fileMenu.setMnemonic('f');
-        fileMenu.setText("File");
+        fileMenu.setText("Cadastros");
 
         openMenuItem.setMnemonic('o');
         openMenuItem.setText("Tipo de documento");
@@ -73,8 +74,7 @@ public class PrincipalForm extends javax.swing.JFrame {
         });
         fileMenu.add(saveAsMenuItem);
 
-        exitMenuItem.setMnemonic('x');
-        exitMenuItem.setText("Exit");
+        exitMenuItem.setText("Cliente");
         exitMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 exitMenuItemActionPerformed(evt);
@@ -135,7 +135,9 @@ public class PrincipalForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuItemActionPerformed
-        System.exit(0);
+        ClientesForm cli = new ClientesForm(this);
+        desktopPane.add(cli);
+        cli.setVisible(true);
     }//GEN-LAST:event_exitMenuItemActionPerformed
 
     private void openMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openMenuItemActionPerformed

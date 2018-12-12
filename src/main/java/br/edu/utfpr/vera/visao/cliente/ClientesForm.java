@@ -22,7 +22,7 @@ import org.jdesktop.observablecollections.ObservableList;
  */
 public class ClientesForm extends javax.swing.JInternalFrame {
 
-    private ObservableList<Cliente> cliente;
+    private ObservableList<Cliente> clientesList;
     private Cliente clienteSelecionado;
     private PrincipalForm principal;
 
@@ -31,10 +31,8 @@ public class ClientesForm extends javax.swing.JInternalFrame {
      */
     public ClientesForm(PrincipalForm principal) {
         this.principal = principal;
-        this.cliente = ObservableCollections
-                .observableList(
-                        new ClienteDao().listAll(Cliente.class)
-                );
+        this.clientesList = ObservableCollections
+                .observableList(new ArrayList<>());
         initComponents();
     }
 
@@ -55,6 +53,10 @@ public class ClientesForm extends javax.swing.JInternalFrame {
         btnNovo = new javax.swing.JButton();
         btnEditar = new javax.swing.JButton();
         btnExcluir = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        txtFiltroNome = new javax.swing.JTextField();
+        btnFiltrar = new javax.swing.JButton();
 
         addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -82,17 +84,25 @@ public class ClientesForm extends javax.swing.JInternalFrame {
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel1.setText("Clientes");
 
-        org.jdesktop.beansbinding.ELProperty eLProperty = org.jdesktop.beansbinding.ELProperty.create("${tiposServico}");
+        org.jdesktop.beansbinding.ELProperty eLProperty = org.jdesktop.beansbinding.ELProperty.create("${clientesList}");
         org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, eLProperty, tblClientes);
-        org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${descricao}"));
-        columnBinding.setColumnName("Descrição");
+        org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${codigo}"));
+        columnBinding.setColumnName("Codigo");
+        columnBinding.setColumnClass(Long.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${nome}"));
+        columnBinding.setColumnName("Nome");
         columnBinding.setColumnClass(String.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${valorPagina}"));
-        columnBinding.setColumnName("Valor por página");
-        columnBinding.setColumnClass(Double.class);
-        columnBinding.setEditable(false);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${instituicao}"));
+        columnBinding.setColumnName("Instituicao");
+        columnBinding.setColumnClass(String.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${cpf}"));
+        columnBinding.setColumnName("Cpf");
+        columnBinding.setColumnClass(String.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${endereco}"));
+        columnBinding.setColumnName("Endereco");
+        columnBinding.setColumnClass(String.class);
         bindingGroup.addBinding(jTableBinding);
-        jTableBinding.bind();org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${tipoServicoSelecionado}"), tblClientes, org.jdesktop.beansbinding.BeanProperty.create("selectedElement"));
+        jTableBinding.bind();org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${clienteSelecionado}"), tblClientes, org.jdesktop.beansbinding.BeanProperty.create("selectedElement"));
         bindingGroup.addBinding(binding);
 
         scrPane.setViewportView(tblClientes);
@@ -125,6 +135,38 @@ public class ClientesForm extends javax.swing.JInternalFrame {
             }
         });
 
+        jLabel2.setText("Nome");
+
+        btnFiltrar.setText("Filtrar");
+        btnFiltrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFiltrarActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(txtFiltroNome)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnFiltrar))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(txtFiltroNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnFiltrar))
+                .addContainerGap(21, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -132,11 +174,12 @@ public class ClientesForm extends javax.swing.JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
-                        .addGap(0, 369, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(scrPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addComponent(scrPane, javax.swing.GroupLayout.DEFAULT_SIZE, 623, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(btnFechar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -150,6 +193,8 @@ public class ClientesForm extends javax.swing.JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(22, 22, 22)
                 .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(scrPane, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -178,7 +223,13 @@ public class ClientesForm extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnExcluirActionPerformed
 
     private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
-        NovoClienteForm ncf = new NovoClienteForm();
+        NovoClienteForm.Callback callbackCliente = cliente -> {
+            if (cliente != null) {
+                clientesList.add(cliente);
+                tblClientes.updateUI();
+            }
+        };
+        NovoClienteForm ncf = new NovoClienteForm(callbackCliente);
         principal.desktopPane.add(ncf);
         ncf.setVisible(true);
     }//GEN-LAST:event_btnNovoActionPerformed
@@ -188,11 +239,21 @@ public class ClientesForm extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnFecharActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
+
         if (clienteSelecionado == null) {
             JOptionPane.showMessageDialog(null, "Selecione um cliente");
             return;
         }
-        NovoClienteForm ncf = new NovoClienteForm(clienteSelecionado);
+        NovoClienteForm.Callback callbackCliente = cliente -> {
+            if (cliente != null) {
+                clientesList.remove(clienteSelecionado);
+                clientesList.add(cliente);
+                tblClientes.updateUI();
+
+            }
+        };
+
+        NovoClienteForm ncf = new NovoClienteForm(clienteSelecionado, callbackCliente);
         principal.desktopPane.add(ncf);
         ncf.setVisible(true);
 
@@ -203,18 +264,20 @@ public class ClientesForm extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_formFocusGained
 
     private void formInternalFrameActivated(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameActivated
-        this.cliente = ObservableCollections
-                .observableList(
-                        new ClienteDao().listAll(Cliente.class)
-                );
+        
     }//GEN-LAST:event_formInternalFrameActivated
 
+    private void btnFiltrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFiltrarActionPerformed
+        clientesList.clear();
+        clientesList = ObservableCollections.observableList(new ClienteDao().getByNome(txtFiltroNome.getText()));
+    }//GEN-LAST:event_btnFiltrarActionPerformed
+
     public ObservableList<Cliente> getCliente() {
-        return cliente;
+        return clientesList;
     }
 
-    public void seCliente(ObservableList<Cliente> cliente) {
-        this.cliente = cliente;
+    public void seCliente(ObservableList<Cliente> clientesList) {
+        this.clientesList = clientesList;
     }
 
 
@@ -222,24 +285,43 @@ public class ClientesForm extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnExcluir;
     private javax.swing.JButton btnFechar;
+    private javax.swing.JButton btnFiltrar;
     private javax.swing.JButton btnNovo;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane scrPane;
     private javax.swing.JTable tblClientes;
+    private javax.swing.JTextField txtFiltroNome;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 
     /**
      * @return the clienteSelecionado
      */
-    public Cliente getTClienteSelecionado() {
+    public Cliente getClienteSelecionado() {
         return clienteSelecionado;
     }
 
     /**
      * @param clienteSelecionado the clienteSelecionado to set
      */
-    public void setTClienteSelecionado(Cliente clienteSelecionado) {
+    public void setClienteSelecionado(Cliente clienteSelecionado) {
         this.clienteSelecionado = clienteSelecionado;
     }
+
+    /**
+     * @return the clientesList
+     */
+    public ObservableList<Cliente> getClientesList() {
+        return clientesList;
+    }
+
+    /**
+     * @param clientesList the clientesList to set
+     */
+    public void setClientesList(ObservableList<Cliente> clientesList) {
+        this.clientesList = clientesList;
+    }
+
 }
