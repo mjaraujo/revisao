@@ -79,7 +79,7 @@ public class NovoClienteForm extends javax.swing.JInternalFrame {
 
         jLabel5.setText("CPF");
 
-        jLabel6.setText("Endereco");
+        jLabel6.setText("E-mail");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${cliente.cpf}"), txtCPF, org.jdesktop.beansbinding.BeanProperty.create("text"));
         bindingGroup.addBinding(binding);
@@ -197,7 +197,7 @@ public class NovoClienteForm extends javax.swing.JInternalFrame {
         } else {
             new ClienteDao().save(cliente);
         }
-        JOptionPane.showMessageDialog(null, "Tipo de serviço adicionado!");
+        JOptionPane.showMessageDialog(null, "Cliente adicionado!");
         dispose();
         callback.handle(cliente);
     }//GEN-LAST:event_btnConfirmarActionPerformed

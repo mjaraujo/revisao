@@ -27,7 +27,7 @@ public class ClientesForm extends javax.swing.JInternalFrame {
     private PrincipalForm principal;
 
     /**
-     * Creates new form TipoServicoForm
+     * Creates new form ClientesForm
      */
     public ClientesForm(PrincipalForm principal) {
         this.principal = principal;
@@ -48,7 +48,7 @@ public class ClientesForm extends javax.swing.JInternalFrame {
 
         jLabel1 = new javax.swing.JLabel();
         scrPane = new javax.swing.JScrollPane();
-        tblClientes = new javax.swing.JTable();
+        tbClientes = new javax.swing.JTable();
         btnFechar = new javax.swing.JButton();
         btnNovo = new javax.swing.JButton();
         btnEditar = new javax.swing.JButton();
@@ -85,27 +85,32 @@ public class ClientesForm extends javax.swing.JInternalFrame {
         jLabel1.setText("Clientes");
 
         org.jdesktop.beansbinding.ELProperty eLProperty = org.jdesktop.beansbinding.ELProperty.create("${clientesList}");
-        org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, eLProperty, tblClientes);
+        org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, eLProperty, tbClientes);
         org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${codigo}"));
         columnBinding.setColumnName("Codigo");
         columnBinding.setColumnClass(Long.class);
         columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${nome}"));
         columnBinding.setColumnName("Nome");
         columnBinding.setColumnClass(String.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${instituicao}"));
-        columnBinding.setColumnName("Instituicao");
-        columnBinding.setColumnClass(String.class);
         columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${cpf}"));
         columnBinding.setColumnName("Cpf");
+        columnBinding.setColumnClass(String.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${instituicao}"));
+        columnBinding.setColumnName("Instituicao");
         columnBinding.setColumnClass(String.class);
         columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${endereco}"));
         columnBinding.setColumnName("Endereco");
         columnBinding.setColumnClass(String.class);
         bindingGroup.addBinding(jTableBinding);
-        jTableBinding.bind();org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${clienteSelecionado}"), tblClientes, org.jdesktop.beansbinding.BeanProperty.create("selectedElement"));
+        jTableBinding.bind();org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${clienteSelecionado}"), tbClientes, org.jdesktop.beansbinding.BeanProperty.create("selectedElement"));
         bindingGroup.addBinding(binding);
 
-        scrPane.setViewportView(tblClientes);
+        tbClientes.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbClientesMouseClicked(evt);
+            }
+        });
+        scrPane.setViewportView(tbClientes);
 
         btnFechar.setText("Fechar");
         btnFechar.addActionListener(new java.awt.event.ActionListener() {
@@ -216,17 +221,17 @@ public class ClientesForm extends javax.swing.JInternalFrame {
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
         if (clienteSelecionado == null) {
-            JOptionPane.showMessageDialog(null, "Selecione um tipo de serviço");
+            JOptionPane.showMessageDialog(null, "Selecione um cliente");
             return;
         }
         new ClienteDao().delete(clienteSelecionado);
+        JOptionPane.showMessageDialog(null, "Cliente excluído");
     }//GEN-LAST:event_btnExcluirActionPerformed
 
     private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
         NovoClienteForm.Callback callbackCliente = cliente -> {
             if (cliente != null) {
-                clientesList.add(cliente);
-                tblClientes.updateUI();
+                clientesList.add(cliente);                
             }
         };
         NovoClienteForm ncf = new NovoClienteForm(callbackCliente);
@@ -248,8 +253,6 @@ public class ClientesForm extends javax.swing.JInternalFrame {
             if (cliente != null) {
                 clientesList.remove(clienteSelecionado);
                 clientesList.add(cliente);
-                tblClientes.updateUI();
-
             }
         };
 
@@ -269,8 +272,16 @@ public class ClientesForm extends javax.swing.JInternalFrame {
 
     private void btnFiltrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFiltrarActionPerformed
         clientesList.clear();
-        clientesList = ObservableCollections.observableList(new ClienteDao().getByNome(txtFiltroNome.getText()));
+        clientesList.addAll(new ClienteDao().getByNome(txtFiltroNome.getText()));
     }//GEN-LAST:event_btnFiltrarActionPerformed
+
+    private void tbClientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbClientesMouseClicked
+        if (evt.getClickCount() == 2) {
+            if (clienteSelecionado != null){
+                dispose();
+            }
+        }
+    }//GEN-LAST:event_tbClientesMouseClicked
 
     public ObservableList<Cliente> getCliente() {
         return clientesList;
@@ -290,8 +301,9 @@ public class ClientesForm extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane scrPane;
-    private javax.swing.JTable tblClientes;
+    private javax.swing.JTable tbClientes;
     private javax.swing.JTextField txtFiltroNome;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
