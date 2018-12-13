@@ -14,6 +14,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
@@ -21,6 +23,9 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "tb_funcionario")
+@NamedQueries({
+        @NamedQuery(name = "Cliente.findByNome", query = "SELECT f FROM Funcionario f WHERE f.nome LIKE :nome ORDER BY f.nome ")}
+)
 public class Funcionario {
     
     @Id

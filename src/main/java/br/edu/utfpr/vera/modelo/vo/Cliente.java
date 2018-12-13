@@ -98,5 +98,11 @@ public class Cliente {
     public void setDocumentoList(List<Documento> documentoList) {
         this.documentoList = documentoList;
     }
-      
+
+    @Override
+    public String toString() {
+        return nome;
+    }
+     
+    
 }
