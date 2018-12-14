@@ -157,7 +157,6 @@ public class NovoDocumentoForm extends javax.swing.JInternalFrame {
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel1.setText("Novo documento");
 
-        btnConfirmar.setBackground(new java.awt.Color(102, 102, 255));
         btnConfirmar.setText("Confirmar");
         btnConfirmar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -165,7 +164,6 @@ public class NovoDocumentoForm extends javax.swing.JInternalFrame {
             }
         });
 
-        btnCancelar.setBackground(new java.awt.Color(102, 102, 255));
         btnCancelar.setText("Cancelar");
         btnCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

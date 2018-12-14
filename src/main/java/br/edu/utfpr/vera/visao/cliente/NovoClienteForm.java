@@ -140,7 +140,6 @@ public class NovoClienteForm extends javax.swing.JInternalFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        btnConfirmar.setBackground(new java.awt.Color(102, 102, 255));
         btnConfirmar.setText("Confirmar");
         btnConfirmar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -148,7 +147,6 @@ public class NovoClienteForm extends javax.swing.JInternalFrame {
             }
         });
 
-        btnCancelar.setBackground(new java.awt.Color(102, 102, 255));
         btnCancelar.setText("Cancelar");
         btnCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

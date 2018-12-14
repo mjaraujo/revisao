@@ -61,6 +61,7 @@ public class DocumentosForm extends javax.swing.JInternalFrame {
         btnFiltrar = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         btnExcluir1 = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         setClosable(true);
         setTitle("Consultor textual");
@@ -94,19 +95,22 @@ public class DocumentosForm extends javax.swing.JInternalFrame {
         org.jdesktop.beansbinding.ELProperty eLProperty = org.jdesktop.beansbinding.ELProperty.create("${documentosList}");
         org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, eLProperty, tbDocumentos);
         org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${titulo}"));
-        columnBinding.setColumnName("Titulo");
+        columnBinding.setColumnName("Tíitulo");
         columnBinding.setColumnClass(String.class);
+        columnBinding.setEditable(false);
         columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${tipoDocumento}"));
-        columnBinding.setColumnName("Tipo Documento");
+        columnBinding.setColumnName("Tipo de documento");
         columnBinding.setColumnClass(br.edu.utfpr.vera.modelo.vo.TipoDocumento.class);
+        columnBinding.setEditable(false);
         columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${cliente}"));
         columnBinding.setColumnName("Cliente");
         columnBinding.setColumnClass(br.edu.utfpr.vera.modelo.vo.Cliente.class);
+        columnBinding.setEditable(false);
         columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${qtCaracteres}"));
-        columnBinding.setColumnName("Qt Caracteres");
+        columnBinding.setColumnName("Qt. caracteres");
         columnBinding.setColumnClass(Long.class);
         columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${situacao}"));
-        columnBinding.setColumnName("Situacao");
+        columnBinding.setColumnName("Situação");
         columnBinding.setColumnClass(br.edu.utfpr.vera.modelo.vo.Situacao.class);
         bindingGroup.addBinding(jTableBinding);
         jTableBinding.bind();org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${documentoSelecionado}"), tbDocumentos, org.jdesktop.beansbinding.BeanProperty.create("selectedElement"));
@@ -192,6 +196,13 @@ public class DocumentosForm extends javax.swing.JInternalFrame {
             }
         });
 
+        jButton1.setText("Tipo de documento");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -200,19 +211,22 @@ public class DocumentosForm extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(scrPane, javax.swing.GroupLayout.DEFAULT_SIZE, 745, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGap(0, 645, Short.MAX_VALUE)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(btnNovo, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnExcluir1, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(136, 136, 136)
+                        .addComponent(jButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnFechar, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -232,7 +246,8 @@ public class DocumentosForm extends javax.swing.JInternalFrame {
                     .addComponent(btnEditar)
                     .addComponent(btnNovo)
                     .addComponent(btnFechar)
-                    .addComponent(btnExcluir1))
+                    .addComponent(btnExcluir1)
+                    .addComponent(jButton1))
                 .addContainerGap())
         );
 
@@ -252,9 +267,10 @@ public class DocumentosForm extends javax.swing.JInternalFrame {
                 documentosList.add(cliente);                
             }
         };
-        NovoDocumentoForm ncf = new NovoDocumentoForm(callbackDocumento);
-        principal.desktopPane.add(ncf);
-        ncf.setVisible(true);
+        NovoDocumentoForm ndf = new NovoDocumentoForm(callbackDocumento);
+        principal.desktopPane.add(ndf);
+        ndf.setVisible(true);
+        ndf.setPosicao();
     }//GEN-LAST:event_btnNovoActionPerformed
 
     private void btnFecharActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFecharActionPerformed
@@ -305,6 +321,10 @@ public class DocumentosForm extends javax.swing.JInternalFrame {
         documentosList.addAll(new DocumentoDao().getByNome(txtFiltroNome.getText()));
     }//GEN-LAST:event_btnFiltrarActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     public ObservableList<Documento> getDocumento() {
         return documentosList;
     }
@@ -320,6 +340,7 @@ public class DocumentosForm extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnFechar;
     private javax.swing.JButton btnFiltrar;
     private javax.swing.JButton btnNovo;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;

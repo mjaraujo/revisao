@@ -41,6 +41,11 @@ public class PrincipalForm extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         openMenuItem = new javax.swing.JMenuItem();
@@ -67,24 +72,70 @@ public class PrincipalForm extends javax.swing.JFrame {
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/figuraInicial.jpeg"))); // NOI18N
         desktopPane.add(jLabel1);
-        jLabel1.setBounds(350, 90, 390, 270);
+        jLabel1.setBounds(360, 150, 390, 270);
 
         jLabel2.setFont(new java.awt.Font("Trebuchet MS", 1, 24)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(255, 153, 102));
+        jLabel2.setForeground(new java.awt.Color(204, 51, 0));
         jLabel2.setText("Vasilévski");
         desktopPane.add(jLabel2);
-        jLabel2.setBounds(420, 320, 120, 30);
+        jLabel2.setBounds(430, 400, 120, 30);
 
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons8-mÃ£o-com-caneta-48.png"))); // NOI18N
         jLabel4.setText("jLabel4");
         desktopPane.add(jLabel4);
-        jLabel4.setBounds(370, 310, 50, 40);
+        jLabel4.setBounds(380, 390, 50, 40);
 
         jLabel5.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(204, 51, 0));
         jLabel5.setText("Consultoria Textual");
         desktopPane.add(jLabel5);
-        jLabel5.setBounds(540, 320, 180, 30);
+        jLabel5.setBounds(550, 400, 180, 30);
+
+        jButton1.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        jButton1.setText("Cliente");
+        jButton1.setActionCommand("Cliente");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        desktopPane.add(jButton1);
+        jButton1.setBounds(240, 100, 110, 60);
+
+        jButton2.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        jButton2.setText("Documento");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        desktopPane.add(jButton2);
+        jButton2.setBounds(360, 100, 120, 60);
+
+        jButton3.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        jButton3.setText("Serviço");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+        desktopPane.add(jButton3);
+        jButton3.setBounds(490, 100, 110, 60);
+
+        jButton4.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        jButton4.setText("Pagamento");
+        desktopPane.add(jButton4);
+        jButton4.setBounds(610, 100, 110, 60);
+
+        jButton5.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        jButton5.setText("Funcionário");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+        desktopPane.add(jButton5);
+        jButton5.setBounds(730, 100, 110, 60);
 
         fileMenu.setMnemonic('f');
         fileMenu.setText("Cadastro");
@@ -189,10 +240,7 @@ public class PrincipalForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuItemActionPerformed
-        ClientesForm cli = new ClientesForm(this);
-        desktopPane.add(cli);
-        cli.setVisible(true);
-        cli.setPosicao();
+        
     }//GEN-LAST:event_exitMenuItemActionPerformed
 
     private void openMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openMenuItemActionPerformed
@@ -203,7 +251,7 @@ public class PrincipalForm extends javax.swing.JFrame {
         TipoServicoForm tsf = new TipoServicoForm(this);
         desktopPane.add(tsf);
         tsf.setPosicao();
-        tsf.setVisible(true);
+        tsf.setVisible(true);        // TODO add your handling code here:       
     }//GEN-LAST:event_saveAsMenuItemActionPerformed
 
     private void editMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editMenuActionPerformed
@@ -211,24 +259,43 @@ public class PrincipalForm extends javax.swing.JFrame {
     }//GEN-LAST:event_editMenuActionPerformed
 
     private void saveMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveMenuItemActionPerformed
-        DocumentosForm df = new DocumentosForm(this);
-        desktopPane.add(df);
-        df.setVisible(true);        // TODO add your handling code here:
-        df.setPosicao();
+        
     }//GEN-LAST:event_saveMenuItemActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        ServicosForm sf = new ServicosForm(this);
-        desktopPane.add(sf);
-        sf.setVisible(true);
+        
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        ClientesForm cli = new ClientesForm(this);
+        desktopPane.add(cli);
+        cli.setVisible(true);
+        cli.setPosicao();        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        ServicosForm sf = new ServicosForm(this);
+        desktopPane.add(sf);
+        sf.setVisible(true);
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        DocumentosForm df = new DocumentosForm(this);
+        desktopPane.add(df);
+        df.setVisible(true);        // TODO add your handling code here:
+        df.setPosicao();        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         FuncionariosForm ff = new FuncionariosForm(this);
         desktopPane.add(ff);
         ff.setVisible(true);
-        ff.setPosicao();
-    }//GEN-LAST:event_jMenuItem2ActionPerformed
+        ff.setPosicao();        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton5ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -239,6 +306,11 @@ public class PrincipalForm extends javax.swing.JFrame {
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenu helpMenu;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

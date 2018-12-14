@@ -122,6 +122,7 @@
               <Subbinding sourcePath="${descricao}">
                 <BindingParameter name="NAME" value="Descri&#xe7;&#xe3;o"/>
                 <BindingParameter name="javax.swing.binding.ParameterKeys.COLUMN_CLASS" value="String.class"/>
+                <BindingParameter name="javax.swing.binding.ParameterKeys.EDITABLE" value="false"/>
               </Subbinding>
               <Subbinding sourcePath="${valorPagina}">
                 <BindingParameter name="NAME" value="Valor por p&#xe1;gina"/>
