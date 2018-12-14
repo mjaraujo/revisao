@@ -44,7 +44,7 @@ public class Pagamento {
     @Column(name = "pag_parPaga")
     private boolean parcelaPaga;
     
-    @Column(name = "pag_forPag", nullable = false)
+    @Column(name = "pag_forPag")
     @Enumerated(EnumType.STRING)
     @Basic(fetch = FetchType.LAZY)   
     private FormaPagamento formaPagamento;

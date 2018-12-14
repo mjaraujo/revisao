@@ -27,11 +27,15 @@ public class ServicoController {
         if (servico.getTiposervicoList().isEmpty()) {
             return "Selecione ao menos um serviço contratado";
         }
+        if (servico.getQtdParcelas() <= 0) {
+            return "Informe a quantidade de parcelas do pagamento";
+        }
+
         return "OK";
     }
 
     public void recalcular() {
-        if(servico.getDocumento()==null){
+        if (servico.getDocumento() == null) {
             servico.setValorServico(0.00);
             return;
         }
