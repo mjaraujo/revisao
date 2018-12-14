@@ -138,7 +138,7 @@
                 <BindingParameter name="javax.swing.binding.ParameterKeys.COLUMN_CLASS" value="br.edu.utfpr.vera.modelo.vo.Funcao.class"/>
               </Subbinding>
               <Subbinding sourcePath="${cpf}">
-                <BindingParameter name="NAME" value="Cpf"/>
+                <BindingParameter name="NAME" value="CPF"/>
                 <BindingParameter name="javax.swing.binding.ParameterKeys.COLUMN_CLASS" value="String.class"/>
               </Subbinding>
             </BindingProperty>
