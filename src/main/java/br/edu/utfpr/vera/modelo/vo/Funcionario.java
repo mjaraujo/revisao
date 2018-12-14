@@ -78,5 +78,11 @@ public class Funcionario {
     public void setFuncao(Funcao funcao) {
         this.funcao = funcao;
     }
+
+    @Override
+    public String toString() {
+        return nome; //To change body of generated methods, choose Tools | Templates.
+    }
     
+        
 }
