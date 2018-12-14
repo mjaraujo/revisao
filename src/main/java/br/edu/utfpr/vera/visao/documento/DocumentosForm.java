@@ -61,7 +61,6 @@ public class DocumentosForm extends javax.swing.JInternalFrame {
         btnFiltrar = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         btnExcluir1 = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
 
         setClosable(true);
         setTitle("Consultor textual");
@@ -175,7 +174,7 @@ public class DocumentosForm extends javax.swing.JInternalFrame {
                     .addComponent(jLabel2)
                     .addComponent(txtFiltroNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnFiltrar))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -193,13 +192,6 @@ public class DocumentosForm extends javax.swing.JInternalFrame {
         btnExcluir1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnExcluir1ActionPerformed(evt);
-            }
-        });
-
-        jButton1.setText("Tipo de documento");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
             }
         });
 
@@ -224,8 +216,6 @@ public class DocumentosForm extends javax.swing.JInternalFrame {
                         .addComponent(btnEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnExcluir1, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(136, 136, 136)
-                        .addComponent(jButton1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnFechar, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
@@ -246,8 +236,7 @@ public class DocumentosForm extends javax.swing.JInternalFrame {
                     .addComponent(btnEditar)
                     .addComponent(btnNovo)
                     .addComponent(btnFechar)
-                    .addComponent(btnExcluir1)
-                    .addComponent(jButton1))
+                    .addComponent(btnExcluir1))
                 .addContainerGap())
         );
 
@@ -321,10 +310,6 @@ public class DocumentosForm extends javax.swing.JInternalFrame {
         documentosList.addAll(new DocumentoDao().getByNome(txtFiltroNome.getText()));
     }//GEN-LAST:event_btnFiltrarActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        
-    }//GEN-LAST:event_jButton1ActionPerformed
-
     public ObservableList<Documento> getDocumento() {
         return documentosList;
     }
@@ -340,7 +325,6 @@ public class DocumentosForm extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnFechar;
     private javax.swing.JButton btnFiltrar;
     private javax.swing.JButton btnNovo;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;

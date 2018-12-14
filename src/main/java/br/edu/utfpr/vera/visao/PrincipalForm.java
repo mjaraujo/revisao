@@ -281,6 +281,7 @@ public class PrincipalForm extends javax.swing.JFrame {
         ServicosForm sf = new ServicosForm(this);
         desktopPane.add(sf);
         sf.setVisible(true);
+        sf.setPosicao();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
