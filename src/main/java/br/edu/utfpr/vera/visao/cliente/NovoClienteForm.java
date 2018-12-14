@@ -9,6 +9,7 @@ import br.edu.utfpr.vera.controller.ClienteController;
 import br.edu.utfpr.vera.visao.tiposervico.*;
 import br.edu.utfpr.vera.modelo.dao.ClienteDao;
 import br.edu.utfpr.vera.modelo.vo.Cliente;
+import java.awt.Dimension;
 import javax.swing.JOptionPane;
 
 /**
@@ -65,13 +66,16 @@ public class NovoClienteForm extends javax.swing.JInternalFrame {
         btnConfirmar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
 
-        setBackground(new java.awt.Color(204, 255, 255));
-        setTitle("Novo cliente");
+        setClosable(true);
+        setResizable(true);
+        setTitle("Consultor textual");
+        setToolTipText("");
+        setFrameIcon(new javax.swing.ImageIcon("C:\\Users\\Vera\\Documents\\NetBeansProjects\\Revisao\\icons8-mÃ£o-com-caneta-48.png")); // NOI18N
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel1.setText("Novo cliente");
 
-        jPanel1.setBackground(new java.awt.Color(153, 204, 255));
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel2.setText("Nome");
 
@@ -188,7 +192,11 @@ public class NovoClienteForm extends javax.swing.JInternalFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+     public void setPosicao() {
+        Dimension d = this.getDesktopPane().getSize();
+        this.setLocation((d.width - this.getSize().width) / 2, (d.height - this.getSize().height) / 2);
+    }
+     
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         dispose();
     }//GEN-LAST:event_btnCancelarActionPerformed

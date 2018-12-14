@@ -17,6 +17,7 @@ import br.edu.utfpr.vera.modelo.vo.Historico;
 import br.edu.utfpr.vera.modelo.vo.Situacao;
 import br.edu.utfpr.vera.modelo.vo.TipoDocumento;
 import br.edu.utfpr.vera.visao.PrincipalForm;
+import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -76,10 +77,10 @@ public class NovoDocumentoForm extends javax.swing.JInternalFrame {
         btnConfirmar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
 
-        setBackground(new java.awt.Color(204, 255, 255));
-        setTitle("Novo cliente");
+        setTitle("Consultor textual");
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/icons8-mÃ£o-com-caneta-48.png"))); // NOI18N
 
-        jPanel1.setBackground(new java.awt.Color(153, 204, 255));
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel2.setText("Título");
 
@@ -205,7 +206,11 @@ public class NovoDocumentoForm extends javax.swing.JInternalFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    
+     public void setPosicao() {
+        Dimension d = this.getDesktopPane().getSize();
+        this.setLocation((d.width - this.getSize().width) / 2, (d.height - this.getSize().height) / 2);
+    }
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         dispose();
     }//GEN-LAST:event_btnCancelarActionPerformed

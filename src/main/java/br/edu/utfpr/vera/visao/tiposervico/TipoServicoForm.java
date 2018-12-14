@@ -8,6 +8,7 @@ package br.edu.utfpr.vera.visao.tiposervico;
 import br.edu.utfpr.vera.modelo.dao.TipoServicoDao;
 import br.edu.utfpr.vera.modelo.vo.TipoServico;
 import br.edu.utfpr.vera.visao.PrincipalForm;
+import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFrame;
@@ -35,6 +36,7 @@ public class TipoServicoForm extends javax.swing.JInternalFrame {
                         new TipoServicoDao().listAll(TipoServico.class)
                 );
         initComponents();
+
     }
 
     /**
@@ -55,6 +57,11 @@ public class TipoServicoForm extends javax.swing.JInternalFrame {
         btnEditar = new javax.swing.JButton();
         btnExcluir = new javax.swing.JButton();
 
+        setClosable(true);
+        setForeground(new java.awt.Color(240, 240, 240));
+        setTitle("Consultor textual");
+        setToolTipText("");
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/icons8-mÃ£o-com-caneta-48.png"))); // NOI18N
         addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 formFocusGained(evt);
@@ -79,7 +86,9 @@ public class TipoServicoForm extends javax.swing.JInternalFrame {
         });
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel1.setText("Tipos de serviço");
+        jLabel1.setText("Controle de tipos de serviço");
+
+        scrPane.setBackground(new java.awt.Color(255, 255, 255));
 
         org.jdesktop.beansbinding.ELProperty eLProperty = org.jdesktop.beansbinding.ELProperty.create("${tiposServico}");
         org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, eLProperty, tblTipoServico);
@@ -133,7 +142,7 @@ public class TipoServicoForm extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
-                        .addGap(0, 302, Short.MAX_VALUE))
+                        .addGap(0, 210, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(scrPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -168,6 +177,11 @@ public class TipoServicoForm extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    public void setPosicao() {
+        Dimension d = this.getDesktopPane().getSize();
+        this.setLocation((d.width - this.getSize().width) / 2, (d.height - this.getSize().height) / 2);
+    }
+
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
         if (tipoServicoSelecionado == null) {
             JOptionPane.showMessageDialog(null, "Selecione um tipo de serviço");
@@ -179,7 +193,7 @@ public class TipoServicoForm extends javax.swing.JInternalFrame {
     private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
         NovoTipoServicoForm.Callback callbackFuncionario = tipoServico -> {
             if (tipoServico != null) {
-                tiposServico.add(tipoServico);                
+                tiposServico.add(tipoServico);
             }
         };
         NovoTipoServicoForm ncf = new NovoTipoServicoForm(callbackFuncionario);
@@ -193,7 +207,7 @@ public class TipoServicoForm extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnFecharActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
-          if (tipoServicoSelecionado == null) {
+        if (tipoServicoSelecionado == null) {
             JOptionPane.showMessageDialog(null, "Selecione um tipoServico");
             return;
         }

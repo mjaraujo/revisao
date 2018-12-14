@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.edu.utfpr.vera.visao.documento;
+package br.edu.utfpr.vera.visao.pagamento;
 
 import br.edu.utfpr.vera.modelo.dao.PagamentoDao;
 import br.edu.utfpr.vera.modelo.vo.FormaPagamento;
@@ -19,24 +19,24 @@ import javax.swing.JOptionPane;
  *
  * @author Vera
  */
-public class PagementoForm extends javax.swing.JInternalFrame {
+public class PagamentoForm extends javax.swing.JInternalFrame {
 
     public interface Callback {
         void handle(Pagamento pagamento);
     }
     
     private final Pagamento pagamento;
-    private final PagementoForm.Callback callback;
+    private final PagamentoForm.Callback callback;
     private boolean edicao;
 
     /**
      * Creates new form NovoPagamentoForm
      */
-    public PagementoForm(PagementoForm.Callback pagamento) {
+    public PagamentoForm(PagamentoForm.Callback pagamento) {
         this(new Pagamento(), pagamento);
     }
 
-    PagementoForm(Pagamento pagamentoSelecionado, PagementoForm.Callback callback) {
+    PagamentoForm(Pagamento pagamentoSelecionado, PagamentoForm.Callback callback) {
         this.pagamento = pagamentoSelecionado;
         this.callback = callback;
         this.edicao = pagamentoSelecionado.getCodigo() == 0;
@@ -68,11 +68,12 @@ public class PagementoForm extends javax.swing.JInternalFrame {
         btnConfirmar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
 
-        setBackground(new java.awt.Color(204, 255, 255));
-        setResizable(true);
-        setTitle("Pagamento");
+        setClosable(true);
+        setTitle("Consultor textual");
+        setToolTipText("");
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/icons8-mÃ£o-com-caneta-48.png"))); // NOI18N
 
-        jPanel1.setBackground(new java.awt.Color(153, 204, 255));
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel2.setText("Valor total");
 
@@ -173,7 +174,7 @@ public class PagementoForm extends javax.swing.JInternalFrame {
         );
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel1.setText("Pagamento");
+        jLabel1.setText("Modo de pagamento");
 
         btnConfirmar.setBackground(new java.awt.Color(102, 102, 255));
         btnConfirmar.setText("Confirmar");
@@ -207,7 +208,7 @@ public class PagementoForm extends javax.swing.JInternalFrame {
                             .addComponent(jLabel1)
                             .addGap(352, 352, 352)))
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

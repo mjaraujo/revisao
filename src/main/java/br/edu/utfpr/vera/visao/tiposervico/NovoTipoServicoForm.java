@@ -8,6 +8,7 @@ package br.edu.utfpr.vera.visao.tiposervico;
 import br.edu.utfpr.vera.controller.TipoServicoController;
 import br.edu.utfpr.vera.modelo.dao.TipoServicoDao;
 import br.edu.utfpr.vera.modelo.vo.TipoServico;
+import java.awt.Dimension;
 
 import javax.swing.JOptionPane;
 
@@ -63,12 +64,14 @@ public class NovoTipoServicoForm extends javax.swing.JInternalFrame {
         btnConfirmar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
 
-        setBackground(new java.awt.Color(204, 255, 255));
+        setClosable(true);
+        setTitle("Consultor textual");
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/icons8-mÃ£o-com-caneta-48.png"))); // NOI18N
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel1.setText("Novo tipo de serviço");
 
-        jPanel1.setBackground(new java.awt.Color(153, 204, 255));
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel2.setText("Descrição");
 
@@ -165,7 +168,10 @@ public class NovoTipoServicoForm extends javax.swing.JInternalFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+     public void setPosicao() {
+        Dimension d = this.getDesktopPane().getSize();
+        this.setLocation((d.width - this.getSize().width) / 2, (d.height - this.getSize().height) / 2);
+    }
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         dispose();
     }//GEN-LAST:event_btnCancelarActionPerformed

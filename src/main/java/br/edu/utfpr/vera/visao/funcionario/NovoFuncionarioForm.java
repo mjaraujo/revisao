@@ -11,6 +11,7 @@ import br.edu.utfpr.vera.visao.tiposervico.*;
 import br.edu.utfpr.vera.modelo.dao.FuncionarioDao;
 import br.edu.utfpr.vera.modelo.vo.Funcao;
 import br.edu.utfpr.vera.modelo.vo.Funcionario;
+import java.awt.Dimension;
 import java.util.Arrays;
 import java.util.List;
 
@@ -21,14 +22,14 @@ import javax.swing.JOptionPane;
  * @author Vera
  */
 public class NovoFuncionarioForm extends javax.swing.JInternalFrame {
-  
+
     private final Funcionario funcionario;
-    
+
     public interface Callback {
 
         void handle(Funcionario funcionario);
     }
-  
+
     private final NovoFuncionarioForm.Callback callback;
     private boolean edicao;
     private final FuncionarioController funcionarioController;
@@ -69,13 +70,14 @@ public class NovoFuncionarioForm extends javax.swing.JInternalFrame {
         btnConfirmar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
 
-        setBackground(new java.awt.Color(204, 255, 255));
-        setTitle("Novo funcionário");
+        setClosable(true);
+        setTitle("Consultor textual");
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/icons8-mÃ£o-com-caneta-48.png"))); // NOI18N
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel1.setText("Novo funcionário");
 
-        jPanel1.setBackground(new java.awt.Color(153, 204, 255));
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel2.setText("Nome");
 
@@ -186,7 +188,10 @@ public class NovoFuncionarioForm extends javax.swing.JInternalFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    public void setPosicao() {
+        Dimension d = this.getDesktopPane().getSize();
+        this.setLocation((d.width - this.getSize().width) / 2, (d.height - this.getSize().height) / 2);
+    }
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         dispose();
     }//GEN-LAST:event_btnCancelarActionPerformed

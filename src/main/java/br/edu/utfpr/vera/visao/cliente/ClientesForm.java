@@ -9,6 +9,7 @@ import br.edu.utfpr.vera.visao.cliente.*;
 import br.edu.utfpr.vera.modelo.dao.ClienteDao;
 import br.edu.utfpr.vera.modelo.vo.Cliente;
 import br.edu.utfpr.vera.visao.PrincipalForm;
+import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFrame;
@@ -58,6 +59,11 @@ public class ClientesForm extends javax.swing.JInternalFrame {
         txtFiltroNome = new javax.swing.JTextField();
         btnFiltrar = new javax.swing.JButton();
 
+        setClosable(true);
+        setIconifiable(true);
+        setTitle("Consultor textual");
+        setToolTipText("");
+        setFrameIcon(new javax.swing.ImageIcon("C:\\Users\\Vera\\Documents\\NetBeansProjects\\Revisao\\icons8-mÃ£o-com-caneta-48.png")); // NOI18N
         addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 formFocusGained(evt);
@@ -82,7 +88,7 @@ public class ClientesForm extends javax.swing.JInternalFrame {
         });
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel1.setText("Clientes");
+        jLabel1.setText("Controle de clientes");
 
         org.jdesktop.beansbinding.ELProperty eLProperty = org.jdesktop.beansbinding.ELProperty.create("${clientesList}");
         org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, eLProperty, tbClientes);
@@ -139,6 +145,8 @@ public class ClientesForm extends javax.swing.JInternalFrame {
                 btnExcluirActionPerformed(evt);
             }
         });
+
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel2.setText("Nome");
 
@@ -218,7 +226,11 @@ public class ClientesForm extends javax.swing.JInternalFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+     public void setPosicao() {
+        Dimension d = this.getDesktopPane().getSize();
+        this.setLocation((d.width - this.getSize().width) / 2, (d.height - this.getSize().height) / 2);
+    }
+     
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
         if (clienteSelecionado == null) {
             JOptionPane.showMessageDialog(null, "Selecione um cliente");
@@ -301,7 +313,6 @@ public class ClientesForm extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane scrPane;
     private javax.swing.JTable tbClientes;
     private javax.swing.JTextField txtFiltroNome;

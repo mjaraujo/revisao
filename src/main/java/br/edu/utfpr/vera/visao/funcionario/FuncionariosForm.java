@@ -10,6 +10,7 @@ import br.edu.utfpr.vera.visao.funcionario.*;
 import br.edu.utfpr.vera.modelo.dao.FuncionarioDao;
 import br.edu.utfpr.vera.modelo.vo.Funcionario;
 import br.edu.utfpr.vera.visao.PrincipalForm;
+import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFrame;
@@ -59,7 +60,9 @@ public class FuncionariosForm extends javax.swing.JInternalFrame {
         txtFiltroNome = new javax.swing.JTextField();
         btnFiltrar = new javax.swing.JButton();
 
-        setTitle("Funcionários");
+        setClosable(true);
+        setTitle("Consultor textual");
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/icons8-mÃ£o-com-caneta-48.png"))); // NOI18N
         addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 formFocusGained(evt);
@@ -84,7 +87,7 @@ public class FuncionariosForm extends javax.swing.JInternalFrame {
         });
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel1.setText("Funcionários");
+        jLabel1.setText("Controle de funcionários");
 
         org.jdesktop.beansbinding.ELProperty eLProperty = org.jdesktop.beansbinding.ELProperty.create("${funcionariosList}");
         org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, eLProperty, tbClientes);
@@ -138,6 +141,8 @@ public class FuncionariosForm extends javax.swing.JInternalFrame {
                 btnExcluirActionPerformed(evt);
             }
         });
+
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel2.setText("Nome");
 
@@ -217,7 +222,11 @@ public class FuncionariosForm extends javax.swing.JInternalFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    public void setPosicao() {
+        Dimension d = this.getDesktopPane().getSize();
+        this.setLocation((d.width - this.getSize().width) / 2, (d.height - this.getSize().height) / 2);
+    }
+    
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
         if (funcionarioSelecionado == null) {
             JOptionPane.showMessageDialog(null, "Selecione um funcionario");
