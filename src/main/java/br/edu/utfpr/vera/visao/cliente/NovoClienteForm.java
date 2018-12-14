@@ -5,6 +5,7 @@
  */
 package br.edu.utfpr.vera.visao.cliente;
 
+import br.edu.utfpr.vera.controller.ClienteController;
 import br.edu.utfpr.vera.visao.tiposervico.*;
 import br.edu.utfpr.vera.modelo.dao.ClienteDao;
 import br.edu.utfpr.vera.modelo.vo.Cliente;
@@ -15,6 +16,8 @@ import javax.swing.JOptionPane;
  * @author Vera
  */
 public class NovoClienteForm extends javax.swing.JInternalFrame {
+
+    private final ClienteController clienteController;
 
     public interface Callback {
         void handle(Cliente cliente);
@@ -35,7 +38,7 @@ public class NovoClienteForm extends javax.swing.JInternalFrame {
         this.cliente = clienteSelecionado;
         this.callback = callback;
         this.edicao = clienteSelecionado.getCodigo() == 0;
-        
+        this.clienteController = new ClienteController(cliente);
         initComponents();
     }
 
@@ -191,7 +194,13 @@ public class NovoClienteForm extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarActionPerformed
-
+        
+         String validar = clienteController.validar();
+        if (validar.equals("OK") == false) {
+            JOptionPane.showMessageDialog(null, validar);
+            return;
+        }
+        
         if (edicao) {
             new ClienteDao().update(cliente);
         } else {

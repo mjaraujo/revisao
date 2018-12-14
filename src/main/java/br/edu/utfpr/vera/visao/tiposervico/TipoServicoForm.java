@@ -177,9 +177,15 @@ public class TipoServicoForm extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnExcluirActionPerformed
 
     private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
-        NovoTipoServicoForm ntsf = new NovoTipoServicoForm();
-        principal.desktopPane.add(ntsf);
-        ntsf.setVisible(true);
+        NovoTipoServicoForm.Callback callbackFuncionario = tipoServico -> {
+            if (tipoServico != null) {
+                tiposServico.add(tipoServico);                
+            }
+        };
+        NovoTipoServicoForm ncf = new NovoTipoServicoForm(callbackFuncionario);
+        principal.desktopPane.add(ncf);
+        ncf.setVisible(true);
+
     }//GEN-LAST:event_btnNovoActionPerformed
 
     private void btnFecharActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFecharActionPerformed
@@ -187,13 +193,20 @@ public class TipoServicoForm extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnFecharActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
-        if (tipoServicoSelecionado == null) {
-            JOptionPane.showMessageDialog(null, "Selecione um tipo de serviço");
+          if (tipoServicoSelecionado == null) {
+            JOptionPane.showMessageDialog(null, "Selecione um tipoServico");
             return;
         }
-        NovoTipoServicoForm ntsf = new NovoTipoServicoForm(tipoServicoSelecionado);
-        principal.desktopPane.add(ntsf);
-        ntsf.setVisible(true);
+        NovoTipoServicoForm.Callback callbackFuncionario = tipoServico -> {
+            if (tipoServico != null) {
+                tiposServico.remove(tipoServicoSelecionado);
+                tiposServico.add(tipoServico);
+            }
+        };
+
+        NovoTipoServicoForm ncf = new NovoTipoServicoForm(tipoServicoSelecionado, callbackFuncionario);
+        principal.desktopPane.add(ncf);
+        ncf.setVisible(true);
 
     }//GEN-LAST:event_btnEditarActionPerformed
 

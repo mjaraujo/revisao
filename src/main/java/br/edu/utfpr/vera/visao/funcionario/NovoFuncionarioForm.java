@@ -21,14 +21,14 @@ import javax.swing.JOptionPane;
  * @author Vera
  */
 public class NovoFuncionarioForm extends javax.swing.JInternalFrame {
-
+  
+    private final Funcionario funcionario;
+    
     public interface Callback {
 
         void handle(Funcionario funcionario);
     }
-
-    private final Funcionario funcionario;
-    
+  
     private final NovoFuncionarioForm.Callback callback;
     private boolean edicao;
     private final FuncionarioController funcionarioController;

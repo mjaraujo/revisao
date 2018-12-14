@@ -5,8 +5,10 @@
  */
 package br.edu.utfpr.vera.visao.tiposervico;
 
+import br.edu.utfpr.vera.controller.TipoServicoController;
 import br.edu.utfpr.vera.modelo.dao.TipoServicoDao;
 import br.edu.utfpr.vera.modelo.vo.TipoServico;
+
 import javax.swing.JOptionPane;
 
 /**
@@ -17,19 +19,28 @@ public class NovoTipoServicoForm extends javax.swing.JInternalFrame {
 
     private final TipoServico tipoServico;
     private boolean edicao;
+    private final TipoServicoController tipoServicoController;
 
-    /**
+     
+    public interface Callback {
+
+        void handle(TipoServico tipoServico);
+    }
+  
+    private final NovoTipoServicoForm.Callback callback;
+    
+     /**
      * Creates new form NovoTipoServicoForm
      */
-    public NovoTipoServicoForm() {
-        tipoServico = new TipoServico();
-        edicao = false;
-        initComponents();
+    public NovoTipoServicoForm(NovoTipoServicoForm.Callback tipoServico) {
+        this(new TipoServico(), tipoServico);
     }
 
-    NovoTipoServicoForm(TipoServico tipoServicoSelecionado) {
-        tipoServico = tipoServicoSelecionado;
-        edicao = true;
+    NovoTipoServicoForm(TipoServico tipoServicoSelecionado, NovoTipoServicoForm.Callback callback) {
+        this.tipoServico = tipoServicoSelecionado;
+        this.callback = callback;
+        this.edicao = tipoServicoSelecionado.getCodigo() == 0;
+        this.tipoServicoController = new TipoServicoController(tipoServico);
         initComponents();
     }
 
@@ -160,10 +171,11 @@ public class NovoTipoServicoForm extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarActionPerformed
-        if (tipoServico.getValorPagina() <= 0D) {
-            JOptionPane.showMessageDialog(null, "Valor da página inválido!");
+        String validar = tipoServicoController.validar();
+        if (validar.equals("OK") == false) {
+            JOptionPane.showMessageDialog(null, validar);
             return;
-        }
+        }        
 
         if(edicao){
             new TipoServicoDao().update(getTipoServico());
