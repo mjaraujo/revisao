@@ -10,10 +10,13 @@ package br.edu.utfpr.vera.modelo.vo;
  * @author Vera
  */
 public enum Situacao {
-    EMPROGRESSO("Em progresso"),
+    AGUARDANDO_ORCAMENTO("Aguardando orçamento"),
     CANCELADO("Cancelado"),
-    PAUSADO("Pausado"),
-    CONCLUIDO("Concluído");
+    CONCLUIDO("Concluído"),
+    EM_PROGRESSO("Em progresso"),
+    FINALIZADO("Finalizado"),
+    ORCAMENTO_ENVIADO("Orçamento enviado"),
+    PAUSADO("Pausado");
     
     private final String descricao;
 

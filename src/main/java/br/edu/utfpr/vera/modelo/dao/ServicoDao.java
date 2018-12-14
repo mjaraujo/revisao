@@ -6,23 +6,18 @@
 package br.edu.utfpr.vera.modelo.dao;
 
 import br.edu.utfpr.vera.modelo.dao.util.GenericDAO;
-import br.edu.utfpr.vera.modelo.vo.Documento;
+import br.edu.utfpr.vera.modelo.vo.Servico;
 import java.util.List;
 
 /**
  *
- * @author Vera
+ * @author Marcio
  */
-public class DocumentoDao extends GenericDAO<Documento> {
+public class ServicoDao extends GenericDAO<Servico> {
 
-    public List<Documento> getByNome(String titulo) {
+    public List<Servico> getByNome(String titulo) {
         titulo = "%" + titulo + "%";
         this.addParams("titulo", titulo);
-        return this.newQueryBuilder("Documento.findByTitulo");
+        return this.newQueryBuilder("Servico.findByTitulo");
     }
-
-    public List<Documento> getOrfaos() {
-        return this.newQueryBuilder("Documento.findOrfaos");
-    }
-
 }

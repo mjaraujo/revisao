@@ -18,6 +18,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import org.hibernate.annotations.Fetch;
@@ -28,6 +30,10 @@ import org.hibernate.annotations.FetchMode;
  */
 @Entity
 @Table(name = "tb_servico")
+@NamedQueries({
+    @NamedQuery(name = "Servico.findByTitulo", query = "SELECT s FROM Servico s WHERE s.documento.titulo LIKE :titulo ORDER BY s.documento.titulo ")}
+)
+
 public class Servico {
 
     @Id
@@ -35,18 +41,22 @@ public class Servico {
     @Column(name = "ser_codigo")
     private long codigo;
 
+    @ManyToOne
+    @JoinColumn(name = "ser_funcionario")
+    private Funcionario funcionario;
+
     @Column(name = "ser_valor")
     private double valorServico;
 
     @Column(name = "ser_qtParc")
     private int qtdParcelas;
-    
+
     @Column(name = "ser_dtPrevEntrega")
     private Date dataPrevEntrega;
-            
+
     @Column(name = "ser_dtVenc")
     private Date dataVencimento;
-        
+
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "ser_docum")
     private Documento documento;
@@ -61,11 +71,11 @@ public class Servico {
     private List<TipoServico> tiposervicoList;
 
     @OneToMany(cascade = CascadeType.ALL)
-    private List <Pagamento> pagamentoList;
-    
+    private List<Pagamento> pagamentoList;
+
     @OneToMany(cascade = CascadeType.ALL)
-    private List <Historico> historicoList;
-    
+    private List<Historico> historicoList;
+
     public Servico() {
     }
 
@@ -99,7 +109,7 @@ public class Servico {
 
     public void setTiposervicoList(List<TipoServico> tiposervicoList) {
         this.tiposervicoList = tiposervicoList;
-    }      
+    }
 
     public int getQtdParcelas() {
         return qtdParcelas;
@@ -125,20 +135,20 @@ public class Servico {
         this.dataVencimento = dataVencimento;
     }
 
-    public List <Pagamento> getPagamentoList() {
+    public List<Pagamento> getPagamentoList() {
         return pagamentoList;
     }
 
-    public void setPagamentoList(List <Pagamento> pagamentoList) {
+    public void setPagamentoList(List<Pagamento> pagamentoList) {
         this.pagamentoList = pagamentoList;
     }
 
-    public List <Historico> getHistoricoList() {
+    public List<Historico> getHistoricoList() {
         return historicoList;
     }
 
-    public void setHistoricoList(List <Historico> historicoList) {
+    public void setHistoricoList(List<Historico> historicoList) {
         this.historicoList = historicoList;
     }
-    
+
 }

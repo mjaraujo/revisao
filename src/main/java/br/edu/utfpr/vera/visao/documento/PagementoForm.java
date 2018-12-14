@@ -3,14 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.edu.utfpr.vera.visao.pagamento;
+package br.edu.utfpr.vera.visao.documento;
 
 import br.edu.utfpr.vera.modelo.dao.PagamentoDao;
-import br.edu.utfpr.vera.visao.pagamento.*;
+import br.edu.utfpr.vera.modelo.vo.FormaPagamento;
 
 import br.edu.utfpr.vera.modelo.vo.Pagamento;
 
-import com.sun.security.ntlm.Client;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -70,7 +69,8 @@ public class PagementoForm extends javax.swing.JInternalFrame {
         btnCancelar = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(204, 255, 255));
-        setTitle("Novo cliente");
+        setResizable(true);
+        setTitle("Pagamento");
 
         jPanel1.setBackground(new java.awt.Color(153, 204, 255));
 
@@ -173,7 +173,7 @@ public class PagementoForm extends javax.swing.JInternalFrame {
         );
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel1.setText("Modo de pagamento");
+        jLabel1.setText("Pagamento");
 
         btnConfirmar.setBackground(new java.awt.Color(102, 102, 255));
         btnConfirmar.setText("Confirmar");
@@ -207,7 +207,7 @@ public class PagementoForm extends javax.swing.JInternalFrame {
                             .addComponent(jLabel1)
                             .addGap(352, 352, 352)))
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -259,12 +259,12 @@ public class PagementoForm extends javax.swing.JInternalFrame {
         return pagamento;
     }
     
-    public List<TipoPagamento> getTiposPagamento(){
-        return Arrays.asList(TipoPagamento.values());
+    public List<FormaPagamento> getFormasPagamento(){
+        return Arrays.asList(FormaPagamento.values());
     }
     
-    public List<Cliente> getClientes(){
-        return new ClienteDao().listAll(Cliente.class);
+    public List<Pagamento> getPagamentos(){
+        return new PagamentoDao().listAll(Pagamento.class);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

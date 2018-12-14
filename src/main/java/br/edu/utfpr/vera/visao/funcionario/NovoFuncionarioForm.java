@@ -5,10 +5,15 @@
  */
 package br.edu.utfpr.vera.visao.funcionario;
 
+import br.edu.utfpr.vera.controller.FuncionarioController;
 import br.edu.utfpr.vera.visao.funcionario.*;
 import br.edu.utfpr.vera.visao.tiposervico.*;
 import br.edu.utfpr.vera.modelo.dao.FuncionarioDao;
+import br.edu.utfpr.vera.modelo.vo.Funcao;
 import br.edu.utfpr.vera.modelo.vo.Funcionario;
+import java.util.Arrays;
+import java.util.List;
+
 import javax.swing.JOptionPane;
 
 /**
@@ -18,12 +23,15 @@ import javax.swing.JOptionPane;
 public class NovoFuncionarioForm extends javax.swing.JInternalFrame {
 
     public interface Callback {
+
         void handle(Funcionario funcionario);
     }
 
     private final Funcionario funcionario;
+    
     private final NovoFuncionarioForm.Callback callback;
     private boolean edicao;
+    private final FuncionarioController funcionarioController;
 
     /**
      * Creates new form NovoFuncionarioForm
@@ -36,7 +44,7 @@ public class NovoFuncionarioForm extends javax.swing.JInternalFrame {
         this.funcionario = funcionarioSelecionado;
         this.callback = callback;
         this.edicao = funcionarioSelecionado.getCodigo() == 0;
-        
+        this.funcionarioController = new FuncionarioController(funcionario);
         initComponents();
     }
 
@@ -56,39 +64,37 @@ public class NovoFuncionarioForm extends javax.swing.JInternalFrame {
         jLabel3 = new javax.swing.JLabel();
         txtDescricao = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
         txtCPF = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        txtInstituicao = new javax.swing.JTextField();
+        cmbFuncao = new javax.swing.JComboBox<>();
         btnConfirmar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(204, 255, 255));
-        setTitle("Novo cliente");
+        setTitle("Novo funcionário");
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel1.setText("Novo cliente");
+        jLabel1.setText("Novo funcionário");
 
         jPanel1.setBackground(new java.awt.Color(153, 204, 255));
 
         jLabel2.setText("Nome");
 
-        jLabel3.setText("Instituição");
+        jLabel3.setText("Função");
 
-        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${cliente.nome}"), txtDescricao, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${funcionario.nome}"), txtDescricao, org.jdesktop.beansbinding.BeanProperty.create("text"));
         bindingGroup.addBinding(binding);
 
         jLabel5.setText("CPF");
 
-        jLabel6.setText("E-mail");
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${cliente.cpf}"), txtCPF, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${funcionario.cpf}"), txtCPF, org.jdesktop.beansbinding.BeanProperty.create("text"));
         bindingGroup.addBinding(binding);
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${cliente.endereco}"), jTextField2, org.jdesktop.beansbinding.BeanProperty.create("text"));
-        bindingGroup.addBinding(binding);
+        cmbFuncao.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${cliente.instituicao}"), txtInstituicao, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        org.jdesktop.beansbinding.ELProperty eLProperty = org.jdesktop.beansbinding.ELProperty.create("${funcoes}");
+        org.jdesktop.swingbinding.JComboBoxBinding jComboBoxBinding = org.jdesktop.swingbinding.SwingBindings.createJComboBoxBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, eLProperty, cmbFuncao);
+        bindingGroup.addBinding(jComboBoxBinding);
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${funcionario.funcao}"), cmbFuncao, org.jdesktop.beansbinding.BeanProperty.create("selectedItem"));
         bindingGroup.addBinding(binding);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -100,16 +106,14 @@ public class NovoFuncionarioForm extends javax.swing.JInternalFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel6))
+                    .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtDescricao)
-                    .addComponent(jTextField2)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(txtCPF, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(txtInstituicao))
+                    .addComponent(cmbFuncao, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -119,18 +123,14 @@ public class NovoFuncionarioForm extends javax.swing.JInternalFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(txtDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGap(9, 9, 9)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(txtInstituicao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cmbFuncao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(txtCPF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -193,6 +193,12 @@ public class NovoFuncionarioForm extends javax.swing.JInternalFrame {
 
     private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarActionPerformed
 
+        String validar = funcionarioController.validar();
+        if (validar.equals("OK") == false) {
+            JOptionPane.showMessageDialog(null, validar);
+            return;
+        }
+
         if (edicao) {
             new FuncionarioDao().update(funcionario);
         } else {
@@ -210,19 +216,21 @@ public class NovoFuncionarioForm extends javax.swing.JInternalFrame {
         return funcionario;
     }
 
+    public List<Funcao> getFuncoes() {
+        return Arrays.asList(Funcao.values());
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnConfirmar;
+    private javax.swing.JComboBox<String> cmbFuncao;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField txtCPF;
     private javax.swing.JTextField txtDescricao;
-    private javax.swing.JTextField txtInstituicao;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 

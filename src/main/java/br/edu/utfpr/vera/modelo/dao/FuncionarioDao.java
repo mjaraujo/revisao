@@ -11,7 +11,7 @@ import java.util.List;
 
 /**
  *
- * @author Marcio
+ * @author Vera
  */
 public class FuncionarioDao extends GenericDAO<Funcionario>{
      

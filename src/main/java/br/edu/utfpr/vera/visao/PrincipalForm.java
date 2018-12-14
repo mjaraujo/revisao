@@ -7,6 +7,8 @@ package br.edu.utfpr.vera.visao;
 
 import br.edu.utfpr.vera.visao.cliente.ClientesForm;
 import br.edu.utfpr.vera.visao.documento.DocumentosForm;
+import br.edu.utfpr.vera.visao.funcionario.FuncionariosForm;
+import br.edu.utfpr.vera.visao.servico.ServicosForm;
 import br.edu.utfpr.vera.visao.tiposervico.NovoTipoServicoForm;
 import br.edu.utfpr.vera.visao.tiposervico.TipoServicoForm;
 
@@ -39,6 +41,7 @@ public class PrincipalForm extends javax.swing.JFrame {
         saveMenuItem = new javax.swing.JMenuItem();
         saveAsMenuItem = new javax.swing.JMenuItem();
         exitMenuItem = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
@@ -61,6 +64,11 @@ public class PrincipalForm extends javax.swing.JFrame {
 
         saveMenuItem.setMnemonic('s');
         saveMenuItem.setText("Documento");
+        saveMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveMenuItemActionPerformed(evt);
+            }
+        });
         fileMenu.add(saveMenuItem);
 
         saveAsMenuItem.setMnemonic('a');
@@ -80,17 +88,25 @@ public class PrincipalForm extends javax.swing.JFrame {
         });
         fileMenu.add(exitMenuItem);
 
+        jMenuItem2.setText("Funcionário");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        fileMenu.add(jMenuItem2);
+
         menuBar.add(fileMenu);
 
         editMenu.setMnemonic('e');
-        editMenu.setText("Documento");
+        editMenu.setText("Serviços");
         editMenu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 editMenuActionPerformed(evt);
             }
         });
 
-        jMenuItem1.setText("Documentos");
+        jMenuItem1.setText("Serviços");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem1ActionPerformed(evt);
@@ -151,10 +167,23 @@ public class PrincipalForm extends javax.swing.JFrame {
 
     }//GEN-LAST:event_editMenuActionPerformed
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void saveMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveMenuItemActionPerformed
         DocumentosForm df = new DocumentosForm(this);
         desktopPane.add(df);
-        df.setVisible(true);     }//GEN-LAST:event_jMenuItem1ActionPerformed
+        df.setVisible(true);        // TODO add your handling code here:
+    }//GEN-LAST:event_saveMenuItemActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        ServicosForm sf = new ServicosForm(this);
+        desktopPane.add(sf);
+        sf.setVisible(true);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        FuncionariosForm ff = new FuncionariosForm(this);
+        desktopPane.add(ff);
+        ff.setVisible(true);
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -166,6 +195,7 @@ public class PrincipalForm extends javax.swing.JFrame {
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenu helpMenu;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem openMenuItem;
     private javax.swing.JMenuItem saveAsMenuItem;

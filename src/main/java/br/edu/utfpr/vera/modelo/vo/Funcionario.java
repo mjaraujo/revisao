@@ -24,7 +24,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "tb_funcionario")
 @NamedQueries({
-        @NamedQuery(name = "Cliente.findByNome", query = "SELECT f FROM Funcionario f WHERE f.nome LIKE :nome ORDER BY f.nome ")}
+        @NamedQuery(name = "Funcionario.findByNome", query = "SELECT f FROM Funcionario f WHERE f.nome LIKE :nome ORDER BY f.nome ")}
 )
 public class Funcionario {
     
