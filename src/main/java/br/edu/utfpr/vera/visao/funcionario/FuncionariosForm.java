@@ -103,7 +103,7 @@ public class FuncionariosForm extends javax.swing.JInternalFrame {
         columnBinding.setColumnName("Função");
         columnBinding.setColumnClass(br.edu.utfpr.vera.modelo.vo.Funcao.class);
         columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${cpf}"));
-        columnBinding.setColumnName("Cpf");
+        columnBinding.setColumnName("CPF");
         columnBinding.setColumnClass(String.class);
         bindingGroup.addBinding(jTableBinding);
         jTableBinding.bind();org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${funcionarioSelecionado}"), tbClientes, org.jdesktop.beansbinding.BeanProperty.create("selectedElement"));
@@ -244,9 +244,10 @@ public class FuncionariosForm extends javax.swing.JInternalFrame {
                 funcionariosList.add(funcionario);                
             }
         };
-        NovoFuncionarioForm ncf = new NovoFuncionarioForm(callbackFuncionario);
-        principal.desktopPane.add(ncf);
-        ncf.setVisible(true);
+        NovoFuncionarioForm nff = new NovoFuncionarioForm(callbackFuncionario);
+        principal.desktopPane.add(nff);
+        nff.setVisible(true);
+        nff.setPosicao();
     }//GEN-LAST:event_btnNovoActionPerformed
 
     private void btnFecharActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFecharActionPerformed
