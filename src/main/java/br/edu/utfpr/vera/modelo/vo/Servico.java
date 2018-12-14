@@ -5,11 +5,15 @@
  */
 package br.edu.utfpr.vera.modelo.vo;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -56,6 +60,11 @@ public class Servico {
 
     @Column(name = "ser_dtVenc")
     private Date dataVencimento;
+
+    @Column(name = "ser_situacao", nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Basic(fetch = FetchType.LAZY)
+    private Situacao situacao;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "ser_docum")
@@ -104,6 +113,9 @@ public class Servico {
     }
 
     public List<TipoServico> getTiposervicoList() {
+        if (tiposervicoList == null) {
+            tiposervicoList = new ArrayList<>();
+        }
         return tiposervicoList;
     }
 
@@ -135,6 +147,23 @@ public class Servico {
         this.dataVencimento = dataVencimento;
     }
 
+    public Funcionario getFuncionario() {
+        return funcionario;
+    }
+
+    public void setFuncionario(Funcionario funcionario) {
+        this.funcionario = funcionario;
+    }
+
+    public Situacao getSituacao() {
+        return situacao;
+    }
+
+    public void setSituacao(Situacao situacao) {
+        this.situacao = situacao;
+    }
+
+    
     public List<Pagamento> getPagamentoList() {
         return pagamentoList;
     }

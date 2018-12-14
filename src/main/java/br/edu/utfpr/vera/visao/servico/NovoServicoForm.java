@@ -5,11 +5,14 @@
  */
 package br.edu.utfpr.vera.visao.servico;
 
+import br.edu.utfpr.vera.controller.ServicoController;
 import br.edu.utfpr.vera.visao.servico.*;
 import br.edu.utfpr.vera.modelo.dao.ClienteDao;
 import br.edu.utfpr.vera.modelo.dao.DocumentoDao;
 import br.edu.utfpr.vera.modelo.dao.FuncionarioDao;
 import br.edu.utfpr.vera.modelo.dao.ServicoDao;
+import br.edu.utfpr.vera.modelo.dao.TipoServicoDao;
+import br.edu.utfpr.vera.modelo.dao.util.GenericDAO;
 import br.edu.utfpr.vera.modelo.vo.Cliente;
 import br.edu.utfpr.vera.modelo.vo.Documento;
 import br.edu.utfpr.vera.modelo.vo.Funcionario;
@@ -23,8 +26,11 @@ import br.edu.utfpr.vera.modelo.vo.TipoServico;
 import br.edu.utfpr.vera.visao.PrincipalForm;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import javax.swing.JOptionPane;
+import org.jdesktop.observablecollections.ObservableCollections;
+import org.jdesktop.observablecollections.ObservableList;
 
 /**
  *
@@ -33,9 +39,16 @@ import javax.swing.JOptionPane;
 public class NovoServicoForm extends javax.swing.JInternalFrame {
 
     public interface Callback {
+
         void handle(Servico servico);
     }
-    
+
+    private final ObservableList<TipoServico> servicosOfertados;
+    private final ObservableList<TipoServico> servicosContratados;
+    private TipoServico tipoServicoOfertadoSelecionado;
+    private TipoServico tipoServicoContratadoSelecionado;
+    private final ServicoController servicoController;
+
     private final Servico servico;
     private final NovoServicoForm.Callback callback;
     private boolean edicao;
@@ -51,6 +64,9 @@ public class NovoServicoForm extends javax.swing.JInternalFrame {
         this.servico = servicoSelecionado;
         this.callback = callback;
         this.edicao = servicoSelecionado.getCodigo() == 0;
+        this.servicosOfertados = ObservableCollections.observableList(new TipoServicoDao().listAll(TipoServico.class));
+        this.servicosContratados = ObservableCollections.observableList(new ArrayList<>());
+        this.servicoController = new ServicoController(servico);
         initComponents();
     }
 
@@ -84,12 +100,12 @@ public class NovoServicoForm extends javax.swing.JInternalFrame {
         jtfPrevisaoEntrega = new javax.swing.JFormattedTextField();
         jLabel11 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        tblOfertados = new javax.swing.JTable();
+        btnAddServico = new javax.swing.JButton();
+        btnRemServico = new javax.swing.JButton();
         jLabel12 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jList2 = new javax.swing.JList<>();
+        jTable2 = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         btnConfirmar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
@@ -115,7 +131,7 @@ public class NovoServicoForm extends javax.swing.JInternalFrame {
         org.jdesktop.beansbinding.ELProperty eLProperty = org.jdesktop.beansbinding.ELProperty.create("${funcionarios}");
         org.jdesktop.swingbinding.JComboBoxBinding jComboBoxBinding = org.jdesktop.swingbinding.SwingBindings.createJComboBoxBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, eLProperty, cmbClientes);
         bindingGroup.addBinding(jComboBoxBinding);
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${documento.cliente}"), cmbClientes, org.jdesktop.beansbinding.BeanProperty.create("selectedItem"));
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${servico.funcionario}"), cmbClientes, org.jdesktop.beansbinding.BeanProperty.create("selectedItem"));
         bindingGroup.addBinding(binding);
 
         cmbDocumento.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
@@ -123,9 +139,11 @@ public class NovoServicoForm extends javax.swing.JInternalFrame {
         eLProperty = org.jdesktop.beansbinding.ELProperty.create("${documentos}");
         jComboBoxBinding = org.jdesktop.swingbinding.SwingBindings.createJComboBoxBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, eLProperty, cmbDocumento);
         bindingGroup.addBinding(jComboBoxBinding);
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${servico.documento}"), cmbDocumento, org.jdesktop.beansbinding.BeanProperty.create("selectedItem"));
+        bindingGroup.addBinding(binding);
 
         jftValorServico.setEditable(false);
-        jftValorServico.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.00"))));
+        jftValorServico.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0"))));
 
         jLabel7.setText("Valor pago");
 
@@ -161,31 +179,60 @@ public class NovoServicoForm extends javax.swing.JInternalFrame {
         jLabel11.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel11.setText("Serviços oferecidos");
 
-        jList1.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane1.setViewportView(jList1);
+        eLProperty = org.jdesktop.beansbinding.ELProperty.create("${servicosOfertados}");
+        org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, eLProperty, tblOfertados);
+        org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${descricao}"));
+        columnBinding.setColumnName("Serviço");
+        columnBinding.setColumnClass(String.class);
+        columnBinding.setEditable(false);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${valorPagina}"));
+        columnBinding.setColumnName("Valor pag.");
+        columnBinding.setColumnClass(Double.class);
+        columnBinding.setEditable(false);
+        bindingGroup.addBinding(jTableBinding);
+        jTableBinding.bind();binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${tipoServicoOfertadoSelecionado}"), tblOfertados, org.jdesktop.beansbinding.BeanProperty.create("selectedElement"));
+        bindingGroup.addBinding(binding);
 
-        jButton1.setText(">");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jScrollPane1.setViewportView(tblOfertados);
+        if (tblOfertados.getColumnModel().getColumnCount() > 0) {
+            tblOfertados.getColumnModel().getColumn(0).setResizable(false);
+            tblOfertados.getColumnModel().getColumn(1).setResizable(false);
+        }
+
+        btnAddServico.setText(">");
+        btnAddServico.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnAddServicoActionPerformed(evt);
             }
         });
 
-        jButton2.setText("<");
+        btnRemServico.setText("<");
+        btnRemServico.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRemServicoActionPerformed(evt);
+            }
+        });
 
         jLabel12.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel12.setText("Serviços contratados");
 
-        jList2.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane2.setViewportView(jList2);
+        eLProperty = org.jdesktop.beansbinding.ELProperty.create("${servicosContratados}");
+        jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, eLProperty, jTable2);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${descricao}"));
+        columnBinding.setColumnName("Serviço");
+        columnBinding.setColumnClass(String.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${valorPagina}"));
+        columnBinding.setColumnName("Valor pag.");
+        columnBinding.setColumnClass(Double.class);
+        bindingGroup.addBinding(jTableBinding);
+        jTableBinding.bind();binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${tipoServicoContratadoSelecionado}"), jTable2, org.jdesktop.beansbinding.BeanProperty.create("selectedElement"));
+        bindingGroup.addBinding(binding);
+
+        jScrollPane2.setViewportView(jTable2);
+        if (jTable2.getColumnModel().getColumnCount() > 0) {
+            jTable2.getColumnModel().getColumn(0).setResizable(false);
+            jTable2.getColumnModel().getColumn(1).setResizable(false);
+        }
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -212,21 +259,16 @@ public class NovoServicoForm extends javax.swing.JInternalFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jLabel6)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(txtQtdParcelas, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jLabel8)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(txtQuitadas, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jLabel7)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jtfValorPago, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addContainerGap())
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(0, 0, Short.MAX_VALUE))))
+                                .addComponent(txtQtdParcelas, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel8)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(txtQuitadas, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel7)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jtfValorPago, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap())
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -241,12 +283,15 @@ public class NovoServicoForm extends javax.swing.JInternalFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(6, 6, 6)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(btnAddServico, javax.swing.GroupLayout.DEFAULT_SIZE, 58, Short.MAX_VALUE)
+                                    .addComponent(btnRemServico, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, Short.MAX_VALUE)))
@@ -291,10 +336,10 @@ public class NovoServicoForm extends javax.swing.JInternalFrame {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 100, Short.MAX_VALUE)
-                        .addComponent(jButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 104, Short.MAX_VALUE)
+                        .addComponent(btnAddServico)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2)
+                        .addComponent(btnRemServico)
                         .addGap(47, 47, 47))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                         .addGap(44, 44, 44)
@@ -365,13 +410,31 @@ public class NovoServicoForm extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarActionPerformed
+        servico.setSituacao(Situacao.AGUARDANDO_ORCAMENTO);
+        servico.getTiposervicoList().addAll(servicosContratados);
 
+        String validar = servicoController.validar();
+
+        if (validar.equals("OK") == false) {
+            JOptionPane.showMessageDialog(rootPane, closable);
+            return;
+        }
         if (edicao) {
             new ServicoDao().update(servico);
         } else {
             new ServicoDao().save(servico);
         }
-        JOptionPane.showMessageDialog(null, "Servico adicionado!");
+        
+        Historico historico = new Historico();
+        historico.setServico(servico);
+        historico.setComentario(JOptionPane.showInputDialog(this, "Observaçao"));
+        historico.setSituacao(Situacao.AGUARDANDO_ORCAMENTO);
+        historico.setData(new Date());
+        
+        GenericDAO<Historico> historicoDao = new GenericDAO<>();
+        historicoDao.save(historico);
+        
+        JOptionPane.showMessageDialog(this, "Servico adicionado!");
         dispose();
         callback.handle(servico);
     }//GEN-LAST:event_btnConfirmarActionPerformed
@@ -380,9 +443,31 @@ public class NovoServicoForm extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jtfValorPagoActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void btnAddServicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddServicoActionPerformed
+        if (tipoServicoOfertadoSelecionado == null) {
+            JOptionPane.showMessageDialog(null, "Selecione um tipo de serviço ofertado");
+            return;
+        }
+        servicosContratados.add(tipoServicoOfertadoSelecionado);
+        servicosOfertados.remove(tipoServicoOfertadoSelecionado);
+        servico.setTiposervicoList(servicosContratados);
+        servicoController.recalcular();
+        jftValorServico.setText(String.valueOf(servico.getValorServico()));
+
+    }//GEN-LAST:event_btnAddServicoActionPerformed
+
+    private void btnRemServicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemServicoActionPerformed
+        if (tipoServicoContratadoSelecionado == null) {
+            JOptionPane.showMessageDialog(null, "Selecione um tipo de serviço ofertado");
+            return;
+        }
+        servicosOfertados.add(tipoServicoContratadoSelecionado);
+        servicosContratados.remove(tipoServicoContratadoSelecionado);
+        servico.setTiposervicoList(servicosContratados);
+        servicoController.recalcular();
+        jftValorServico.setText(String.valueOf(servico.getValorServico()));
+
+    }//GEN-LAST:event_btnRemServicoActionPerformed
 
     /**
      * @return the servico
@@ -390,22 +475,53 @@ public class NovoServicoForm extends javax.swing.JInternalFrame {
     public Servico getServico() {
         return servico;
     }
-    
-    public List<Documento> getDocumentos(){
+
+    public List<Documento> getDocumentos() {
         return new DocumentoDao().getOrfaos();
     }
-    
-    public List<Funcionario> getFuncionarios(){
+
+    public List<Funcionario> getFuncionarios() {
         return new FuncionarioDao().listAll(Funcionario.class);
     }
 
+    /**
+     * @return the servicosOfertados
+     */
+    public ObservableList<TipoServico> getServicosOfertados() {
+        return servicosOfertados;
+    }
+
+    /**
+     * @return the servicosContratados
+     */
+    public ObservableList<TipoServico> getServicosContratados() {
+        return servicosContratados;
+    }
+
+    public TipoServico getTipoServicoOfertadoSelecionado() {
+        return tipoServicoOfertadoSelecionado;
+    }
+
+    public void setTipoServicoOfertadoSelecionado(TipoServico tipoServicoSelecionado) {
+        this.tipoServicoOfertadoSelecionado = tipoServicoSelecionado;
+    }
+
+    public TipoServico getTipoServicoContratadoSelecionado() {
+        return tipoServicoContratadoSelecionado;
+    }
+
+    public void setTipoServicoContratadoSelecionado(TipoServico tipoServicoContratadoSelecionado) {
+        this.tipoServicoContratadoSelecionado = tipoServicoContratadoSelecionado;
+    }
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAddServico;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnConfirmar;
+    private javax.swing.JButton btnRemServico;
     private javax.swing.JComboBox<String> cmbClientes;
     private javax.swing.JComboBox<String> cmbDocumento;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -418,18 +534,18 @@ public class NovoServicoForm extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JList<String> jList1;
-    private javax.swing.JList<String> jList2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable jTable2;
     private javax.swing.JFormattedTextField jftValorServico;
     private javax.swing.JFormattedTextField jtfPrevisaoEntrega;
     private javax.swing.JFormattedTextField jtfValorPago;
     private javax.swing.JFormattedTextField jtfVencimento;
+    private javax.swing.JTable tblOfertados;
     private javax.swing.JTextField txtQtdParcelas;
     private javax.swing.JTextField txtQuitadas;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 
-  }
+}

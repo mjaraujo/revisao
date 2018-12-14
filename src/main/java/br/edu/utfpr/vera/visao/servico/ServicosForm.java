@@ -10,9 +10,13 @@ import br.edu.utfpr.vera.visao.servico.NovoServicoForm;
 import br.edu.utfpr.vera.visao.cliente.*;
 import br.edu.utfpr.vera.visao.cliente.*;
 import br.edu.utfpr.vera.modelo.dao.ServicoDao;
+import br.edu.utfpr.vera.modelo.dao.util.GenericDAO;
+import br.edu.utfpr.vera.modelo.vo.Historico;
 import br.edu.utfpr.vera.modelo.vo.Servico;
+import br.edu.utfpr.vera.modelo.vo.Situacao;
 import br.edu.utfpr.vera.visao.PrincipalForm;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -56,17 +60,17 @@ public class ServicosForm extends javax.swing.JInternalFrame {
         btnFechar = new javax.swing.JButton();
         btnNovo = new javax.swing.JButton();
         btnEditar = new javax.swing.JButton();
-        btnExcluir = new javax.swing.JButton();
+        btnCancelar = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         txtFiltroNome = new javax.swing.JTextField();
         btnFiltrar = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         btnExcluir1 = new javax.swing.JButton();
-        jToggleButton2 = new javax.swing.JToggleButton();
-        jButton1 = new javax.swing.JButton();
+        btnPausar = new javax.swing.JToggleButton();
+        btnPagamento = new javax.swing.JButton();
         jToggleButton3 = new javax.swing.JToggleButton();
-        jButton2 = new javax.swing.JButton();
+        btnEmProgresso = new javax.swing.JButton();
 
         setTitle("Serviços");
         addFocusListener(new java.awt.event.FocusAdapter() {
@@ -93,29 +97,39 @@ public class ServicosForm extends javax.swing.JInternalFrame {
         });
 
         btnOrcamento.setText("Orçamento enviado");
+        btnOrcamento.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnOrcamentoActionPerformed(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel1.setText("Serviços");
 
-        org.jdesktop.beansbinding.ELProperty eLProperty = org.jdesktop.beansbinding.ELProperty.create("${documentosList}");
+        org.jdesktop.beansbinding.ELProperty eLProperty = org.jdesktop.beansbinding.ELProperty.create("${servicosList}");
         org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, eLProperty, tbDocumentos);
-        org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${titulo}"));
-        columnBinding.setColumnName("Titulo");
-        columnBinding.setColumnClass(String.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${tipoDocumento}"));
-        columnBinding.setColumnName("Tipo Documento");
-        columnBinding.setColumnClass(br.edu.utfpr.vera.modelo.vo.TipoDocumento.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${cliente}"));
-        columnBinding.setColumnName("Cliente");
-        columnBinding.setColumnClass(br.edu.utfpr.vera.modelo.vo.Cliente.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${qtCaracteres}"));
-        columnBinding.setColumnName("Qt Caracteres");
-        columnBinding.setColumnClass(Long.class);
+        org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${documento}"));
+        columnBinding.setColumnName("Documento");
+        columnBinding.setColumnClass(br.edu.utfpr.vera.modelo.vo.Documento.class);
+        columnBinding.setEditable(false);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${funcionario}"));
+        columnBinding.setColumnName("Funcionario");
+        columnBinding.setColumnClass(br.edu.utfpr.vera.modelo.vo.Funcionario.class);
+        columnBinding.setEditable(false);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${dataPrevEntrega}"));
+        columnBinding.setColumnName("Data Prev Entrega");
+        columnBinding.setColumnClass(java.util.Date.class);
+        columnBinding.setEditable(false);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${valorServico}"));
+        columnBinding.setColumnName("Valor Servico");
+        columnBinding.setColumnClass(Double.class);
+        columnBinding.setEditable(false);
         columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${situacao}"));
-        columnBinding.setColumnName("Situacao");
+        columnBinding.setColumnName("Situação");
         columnBinding.setColumnClass(br.edu.utfpr.vera.modelo.vo.Situacao.class);
+        columnBinding.setEditable(false);
         bindingGroup.addBinding(jTableBinding);
-        jTableBinding.bind();org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${documentoSelecionado}"), tbDocumentos, org.jdesktop.beansbinding.BeanProperty.create("selectedElement"));
+        jTableBinding.bind();org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${servicoSelecionado}"), tbDocumentos, org.jdesktop.beansbinding.BeanProperty.create("selectedElement"));
         bindingGroup.addBinding(binding);
 
         tbDocumentos.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -146,10 +160,10 @@ public class ServicosForm extends javax.swing.JInternalFrame {
             }
         });
 
-        btnExcluir.setText("Cancelar serviço");
-        btnExcluir.addActionListener(new java.awt.event.ActionListener() {
+        btnCancelar.setText("Cancelar serviço");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnExcluirActionPerformed(evt);
+                btnCancelarActionPerformed(evt);
             }
         });
 
@@ -182,7 +196,7 @@ public class ServicosForm extends javax.swing.JInternalFrame {
                     .addComponent(jLabel2)
                     .addComponent(txtFiltroNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnFiltrar))
-                .addContainerGap(44, Short.MAX_VALUE))
+                .addContainerGap(48, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -203,13 +217,28 @@ public class ServicosForm extends javax.swing.JInternalFrame {
             }
         });
 
-        jToggleButton2.setText("Pausar");
+        btnPausar.setText("Pausar");
+        btnPausar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPausarActionPerformed(evt);
+            }
+        });
 
-        jButton1.setText("Pagamento");
+        btnPagamento.setText("Pagamento");
+        btnPagamento.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPagamentoActionPerformed(evt);
+            }
+        });
 
         jToggleButton3.setText("Finalizar");
 
-        jButton2.setText("Em progresso");
+        btnEmProgresso.setText("Em progresso");
+        btnEmProgresso.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEmProgressoActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -229,21 +258,19 @@ public class ServicosForm extends javax.swing.JInternalFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnFechar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(scrPane, javax.swing.GroupLayout.PREFERRED_SIZE, 608, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(btnExcluir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(btnOrcamento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jToggleButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                    .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jToggleButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addComponent(scrPane, javax.swing.GroupLayout.PREFERRED_SIZE, 608, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnPagamento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jToggleButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnPausar, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnCancelar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(btnEmProgresso, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(btnOrcamento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -256,19 +283,19 @@ public class ServicosForm extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnOrcamento)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnExcluir)
+                        .addComponent(btnCancelar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2)
+                        .addComponent(btnEmProgresso)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jToggleButton2)
+                        .addComponent(btnPausar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jToggleButton3))
+                        .addComponent(jToggleButton3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnPagamento))
                     .addComponent(scrPane, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -284,19 +311,10 @@ public class ServicosForm extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
-        if (servicoSelecionado == null) {
-            JOptionPane.showMessageDialog(null, "Selecione um cliente");
-            return;
-        }
-        new ServicoDao().delete(servicoSelecionado);
-        JOptionPane.showMessageDialog(null, "Servico excluído");
-    }//GEN-LAST:event_btnExcluirActionPerformed
-
     private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
         NovoServicoForm.Callback callbackServico = cliente -> {
             if (cliente != null) {
-                servicosList.add(cliente);                
+                servicosList.add(cliente);
             }
         };
         NovoServicoForm ncf = new NovoServicoForm(callbackServico);
@@ -332,7 +350,7 @@ public class ServicosForm extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_formFocusGained
 
     private void formInternalFrameActivated(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameActivated
-        
+
     }//GEN-LAST:event_formInternalFrameActivated
 
     private void btnFiltrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFiltrarActionPerformed
@@ -342,7 +360,7 @@ public class ServicosForm extends javax.swing.JInternalFrame {
 
     private void tbDocumentosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbDocumentosMouseClicked
         if (evt.getClickCount() == 2) {
-            if (servicoSelecionado != null){
+            if (servicoSelecionado != null) {
                 dispose();
             }
         }
@@ -351,6 +369,88 @@ public class ServicosForm extends javax.swing.JInternalFrame {
     private void btnExcluir1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluir1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnExcluir1ActionPerformed
+
+    private void btnOrcamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOrcamentoActionPerformed
+
+        if (servicoSelecionado == null) {
+            JOptionPane.showMessageDialog(null, "Selecione um cliente");
+            return;
+        }
+        if (!servicoSelecionado.getSituacao().equals(Situacao.AGUARDANDO_ORCAMENTO)) {
+            JOptionPane.showMessageDialog(this, "Orçamento já enviado");
+            return;
+        }
+        servicoSelecionado.setSituacao(Situacao.ORCAMENTO_ENVIADO);
+        Historico historico = new Historico();
+        historico.setServico(servicoSelecionado);
+        historico.setSituacao(Situacao.ORCAMENTO_ENVIADO);
+        historico.setComentario(JOptionPane.showInputDialog(this, "Observação"));
+        historico.setData(new Date());
+        GenericDAO<Historico> historicoDao = new GenericDAO<>();
+        historicoDao.save(historico);
+
+    }//GEN-LAST:event_btnOrcamentoActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        if (servicoSelecionado == null) {
+            JOptionPane.showMessageDialog(null, "Selecione um serviço");
+            return;
+        }
+        if (!servicoSelecionado.getSituacao().equals(Situacao.CANCELADO)) {
+            JOptionPane.showMessageDialog(this, "Serviço já cancelado");
+            return;
+        }
+        servicoSelecionado.setSituacao(Situacao.CANCELADO);
+        Historico historico = new Historico();
+        historico.setServico(servicoSelecionado);
+        historico.setSituacao(Situacao.ORCAMENTO_ENVIADO);
+        historico.setComentario(JOptionPane.showInputDialog(this, "Observação"));
+        historico.setData(new Date());
+        GenericDAO<Historico> historicoDao = new GenericDAO<>();
+        historicoDao.save(historico);
+    }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void btnEmProgressoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEmProgressoActionPerformed
+        if (servicoSelecionado == null) {
+            JOptionPane.showMessageDialog(null, "Selecione um serviço");
+            return;
+        }
+        if (!servicoSelecionado.getSituacao().equals(Situacao.EM_PROGRESSO)) {
+            JOptionPane.showMessageDialog(this, "Serviço já está em progresso");
+            return;
+        }
+        servicoSelecionado.setSituacao(Situacao.EM_PROGRESSO);
+        Historico historico = new Historico();
+        historico.setServico(servicoSelecionado);
+        historico.setSituacao(Situacao.ORCAMENTO_ENVIADO);
+        historico.setComentario(JOptionPane.showInputDialog(this, "Observação"));
+        historico.setData(new Date());
+        GenericDAO<Historico> historicoDao = new GenericDAO<>();
+        historicoDao.save(historico);        // TODO add your handling code here:
+    }//GEN-LAST:event_btnEmProgressoActionPerformed
+
+    private void btnPausarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPausarActionPerformed
+        if (servicoSelecionado == null) {
+            JOptionPane.showMessageDialog(null, "Selecione um serviço");
+            return;
+        }
+        if (!servicoSelecionado.getSituacao().equals(Situacao.PAUSADO)) {
+            JOptionPane.showMessageDialog(this, "Serviço já está em pausa");
+            return;
+        }
+        servicoSelecionado.setSituacao(Situacao.PAUSADO);
+        Historico historico = new Historico();
+        historico.setServico(servicoSelecionado);
+        historico.setSituacao(Situacao.ORCAMENTO_ENVIADO);
+        historico.setComentario(JOptionPane.showInputDialog(this, "Observação"));
+        historico.setData(new Date());
+        GenericDAO<Historico> historicoDao = new GenericDAO<>();
+        historicoDao.save(historico);
+    }//GEN-LAST:event_btnPausarActionPerformed
+
+    private void btnPagamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPagamentoActionPerformed
+            
+    }//GEN-LAST:event_btnPagamentoActionPerformed
 
     public ObservableList<Servico> getServico() {
         return servicosList;
@@ -362,20 +462,20 @@ public class ServicosForm extends javax.swing.JInternalFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnEditar;
-    private javax.swing.JButton btnExcluir;
+    private javax.swing.JButton btnEmProgresso;
     private javax.swing.JButton btnExcluir1;
     private javax.swing.JButton btnFechar;
     private javax.swing.JButton btnFiltrar;
     private javax.swing.JButton btnNovo;
     private javax.swing.JToggleButton btnOrcamento;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton btnPagamento;
+    private javax.swing.JToggleButton btnPausar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JToggleButton jToggleButton2;
     private javax.swing.JToggleButton jToggleButton3;
     private javax.swing.JScrollPane scrPane;
     private javax.swing.JTable tbDocumentos;

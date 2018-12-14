@@ -16,7 +16,6 @@ import br.edu.utfpr.vera.modelo.vo.TipoServico;
  */
 public class Principal {
     public static void main(String[] args) {
-
         PrincipalForm principalForm = new PrincipalForm();
         principalForm.setVisible(true);
     }

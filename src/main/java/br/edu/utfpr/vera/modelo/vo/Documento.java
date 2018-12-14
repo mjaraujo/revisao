@@ -29,7 +29,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "tb_documento")
 @NamedQueries({
-    @NamedQuery(name = "Documento.findOrfaos", query = "SELECT d FROM Documento d WHERE SIZE(d.servicoList) = 0 ")
+    @NamedQuery(name = "Documento.findOrfaos", query = "SELECT d FROM Documento d LEFT JOIN d.servicoList s")
     ,@NamedQuery(name = "Documento.findByTitulo", query = "SELECT d FROM Documento d WHERE d.titulo LIKE :titulo ORDER BY d.titulo ")}
 )
 public class Documento {
@@ -104,6 +104,5 @@ public class Documento {
     public String toString() {
         return cliente.getNome() + " - " + titulo; //To change body of generated methods, choose Tools | Templates.
     }
-    
-    
+
 }
