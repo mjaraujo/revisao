@@ -79,7 +79,7 @@ public class Servico {
     @Fetch(FetchMode.SUBSELECT)
     private List<TipoServico> tiposervicoList;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "servico")
     private List<Pagamento> pagamentoList;
 
     @OneToMany(cascade = CascadeType.ALL)
@@ -165,6 +165,8 @@ public class Servico {
 
     
     public List<Pagamento> getPagamentoList() {
+        if(pagamentoList == null)
+            pagamentoList = new ArrayList<>();
         return pagamentoList;
     }
 
